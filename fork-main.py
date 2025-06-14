@@ -131,6 +131,13 @@ def looking_arount_action():
         window.after(sleep_time, lambda: play_action_function(choose_action()))
 
     play_animation(animations[12], on_start=lambda: print("Look arount Start"), on_end=on_end)
+    
+def explore_action():
+    def on_end():
+        sleep_time = random.randint(1000, 2000)
+        window.after(sleep_time, lambda: play_action_function(choose_action()))
+
+    play_animation(animations[8], on_start=lambda: print("Look arount Start"), on_end=on_end)
 
 from PIL import ImageOps
 import random
@@ -328,6 +335,7 @@ def sleep_action():
     # 开始播放第一个动画
     play_next_animation()
 
+fail_eating_count = 0
 def eating_action():
     # 定义目标路径变量
     target_delete_path = None
@@ -364,8 +372,14 @@ def eating_action():
 
         if on_start:
             result = on_start()
-            if result is False:
-                play_next_animation(index + 1)
+            # 如果当前是动画二（index == 1）且 try_eating 返回 Fals
+            if index == 1 and result is False:
+                global fail_eating_count    
+                fail_eating_count += 1
+                if fail_eating_count > 2:
+                    play_animation(animations[8], on_start=lambda: print("GG"))
+                    return 
+                play_next_animation(index + 10)
                 return
 
         play_animation(
@@ -379,6 +393,9 @@ def eating_action():
 special_actions = [2]
 normal_actions = [0,1,3,4,5,6,7]
 
+# special_actions = [8]
+# normal_actions = [2]
+
 # 行动函数映射
 action_functions = {
     0: original_action,
@@ -389,6 +406,7 @@ action_functions = {
     5: looking_arount_action,
     6: jumping_action,
     7: jiggling_action,
+    8: explore_action,
 }
 
 # 选择行动函数

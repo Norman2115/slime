@@ -5,6 +5,8 @@ from PIL import Image, ImageSequence, ImageOps
 import win32gui
 import tempfile
 import os
+import ss
+import xy
 
 # 获取窗口尺寸
 hwnd = win32gui.GetForegroundWindow()
@@ -13,11 +15,11 @@ width = right - left
 height = bottom - top
 
 # 初始位置
-x = int(width * 0.85)
+x = int(width * 0.1)
 y = int(height * 0.75)
 
 # 初始化参数
-cd_duration = 5000 # 特殊行动共享CD（毫秒）
+cd_duration = 500000 # 特殊行动共享CD（毫秒）
 last_special_time = 0  # 上次执行特殊行动的时间
 
 # Tkinter窗口配置
@@ -144,14 +146,62 @@ def flying_action():
     # 开始播放第一个动画
     play_next_animation()
 
+def eating_action():
+    # 定义目标路径变量
+    target_delete_path = None
+
+    # 函数定义放前面
+    def try_eating():
+        nonlocal target_delete_path
+        deleted_path = ss.get_oldest_root_desktop_file(3)
+        target_delete_path = deleted_path
+        return bool(deleted_path)  # 返回 True/False 控制是否播放下个动画
+
+    def eattinggggggggg():
+        if not target_delete_path:
+            print("Nothing to eat!")
+            return
+        xy.delete_directory_contents(target_delete_path)
+
+    # 定义动画序列
+    animation_sequence = [
+        (animations[9], lambda: print("Hungry ...")),
+        (animations[14], try_eating),
+        (animations[7], eattinggggggggg),
+        (animations[4], lambda: print("Yay"))
+    ]
+
+    # 动画播放逻辑
+    def play_next_animation(index=0):
+        if index >= len(animation_sequence):
+            window.geometry(f"256x320+{x}+{y}")
+            play_action_function(choose_action())
+            return
+
+        frames, on_start = animation_sequence[index]
+
+        if on_start:
+            result = on_start()
+            if result is False:
+                play_next_animation(index + 1)
+                return
+
+        play_animation(
+            frames,
+            on_end=lambda: play_next_animation(index + 1)
+        )
+
+    play_next_animation()
+        
 # 行动分类
-special_actions = [1]
-normal_actions = [0]
+special_actions = [2]
+normal_actions = [0,1]
 
 # 行动函数映射
 action_functions = {
     0: original_action,
     1: flying_action,
+    2: eating_action,
 }
 
 # 选择行动函数

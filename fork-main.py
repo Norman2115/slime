@@ -311,7 +311,6 @@ def sleep_action():
         (animations[5], lambda: print("sleeping Action Start - Close zzz")),
         (animations[15], lambda: print("Sleep")),
         (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
         (animations[13], lambda: print("Wake up"))
     ]
 

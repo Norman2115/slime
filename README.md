@@ -5,4 +5,8 @@ Slime is what we called our desktop pet. And by 'lethal', we mean it doesn't pla
 ## Meet Slime
 ![Image](https://github.com/user-attachments/assets/ab727480-bb2b-41f4-aa7e-90b062bc8aa9)
 
-P.S. Whatever you do, don’t look inside my directory — it’s a disaster zone. I promise I’ll organize it… right after the hackathon.
+---
+
+Ugh. One of our members accidentally studied Computer Science instead of Art Design. Wasted talent. Thanks to his hand-drawn assets, SLIME now looks suspiciously cute for a file-eating monster.
+
+P.S. Whatever you do, please don’t look inside my directory. It’s a warzone. I promise I’ll organize it… right after the hackathon, maybe?

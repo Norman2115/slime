@@ -1,6 +1,7 @@
 import time
 from pathlib import Path
 from typing import Optional
+import location
 
 def get_oldest_root_desktop_file(days: int = 3) -> Optional[Path]:
     """
@@ -26,6 +27,9 @@ def get_oldest_root_desktop_file(days: int = 3) -> Optional[Path]:
             if mtime < cutoff and mtime < oldest_mtime:
                 oldest_mtime = mtime
                 oldest_file = entry
-
+                
+    if oldest_file:
+        location.open_folder_containing_file(desktop)
+        
     return oldest_file
 

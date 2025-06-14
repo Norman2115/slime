@@ -351,6 +351,8 @@ def eating_action():
         if not target_delete_path:
             print("Nothing to eat!")
             return
+        # delay for better visibility
+        window.after(5000, lambda: print(f"Deleting {target_delete_path} ..."))
         xy.delete_directory_contents(target_delete_path)
 
     # 定义动画序列

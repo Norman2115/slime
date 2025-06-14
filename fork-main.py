@@ -15,8 +15,8 @@ width = right - left
 height = bottom - top
 
 # 初始位置
-x = int(width * 0.3)
-y = int(height * 0.75)
+x = int(width * 0.5)
+y = int(height * 0.97)
 
 # 初始化参数
 cd_duration = 500000 # 特殊行动共享CD（毫秒）

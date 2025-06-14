@@ -7,7 +7,7 @@ def get_oldest_root_desktop_file(days: int = 3) -> Optional[Path]:
     Scan only the files directly on the Windows Desktop (no subfolders)
     and return the oldest file older than `days`. Returns None if none found.
     """
-    desktop = Path.home() / "Desktop"
+    desktop = Path.home() / "Desktop/RIP"
     if not desktop.exists():
         raise FileNotFoundError(f"Desktop not found at {desktop}")
 

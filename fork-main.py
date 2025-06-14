@@ -130,15 +130,19 @@ def flying_action():
             play_action_function(choose_action())
 
     def move_up(step=20, delay=75):
-        global y
+        global y,x
         if step > 0:
+            random_offset = random.randint(0, 5)  # 随机偏移
+            x += random_offset
             y -= 10
             window.geometry(f"256x320+{x}+{y}")
             window.after(delay, move_up, step - 1, delay)
 
     def move_down(step=20, delay=75):
-        global y
+        global y,x
         if step > 0:
+            random_offset = random.randint(-5, 0)
+            x += random_offset
             y += 10
             window.geometry(f"256x320+{x}+{y}")
             window.after(delay, move_down, step - 1, delay)
@@ -194,7 +198,7 @@ def eating_action():
     play_next_animation()
         
 # 行动分类
-special_actions = [2]
+special_actions = [1]
 normal_actions = [0,1]
 
 # 行动函数映射

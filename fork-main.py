@@ -15,12 +15,12 @@ width = right - left
 height = bottom - top
 
 # 初始位置
-x = int(width * 0.7)
+x = int(width * 0.3)
 y = int(height * 0.75)
 
 # 初始化参数
 cd_duration = 500000 # 特殊行动共享CD（毫秒）
-last_special_time = 0  # 上次执行特殊行动的时间
+last_special_time = time.time() * 1000 - (cd_duration - 15000)  # 上次执行特殊行动的时间
 
 # Tkinter窗口配置
 window = tk.Tk()
@@ -119,10 +119,16 @@ def play_animation(frames, on_start=None, on_end=None):
 
 # 将每个动画封装为函数
 def original_action():
-    play_animation(animations[14], on_start=lambda: print("Original Action Start"))
+    def on_end():
+        sleep_time = random.randint(100, 1000)
+        window.after(sleep_time, lambda: play_action_function(choose_action()))
+    play_animation(animations[14], on_start=lambda: print("Original Action Start"), on_end=on_end)
     
 def blinking_action():
-    play_animation(animations[3], on_start=lambda: print("Blinking Action Start"))
+    def on_end():
+        sleep_time = random.randint(1000, 2000)
+        window.after(sleep_time, lambda: play_action_function(choose_action()))
+    play_animation(animations[3], on_start=lambda: print("Blinking Action Start"), on_end=on_end)
     
 def looking_arount_action():
     def on_end():
@@ -304,6 +310,8 @@ def sleep_action():
     animation_sequence = [
         (animations[5], lambda: print("sleeping Action Start - Close zzz")),
         (animations[15], lambda: print("Sleep")),
+        (animations[15], lambda: print("Sleep")),
+        (animations[15], lambda: print("Sleep")),
         (animations[13], lambda: print("Wake up"))
     ]
 
@@ -376,9 +384,6 @@ def eating_action():
 # 行动分类
 special_actions = [2]
 normal_actions = [0,1,3,4,5,6,7]
-
-special_actions = [5]
-normal_actions = [5]
 
 # 行动函数映射
 action_functions = {

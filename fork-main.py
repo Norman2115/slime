@@ -178,7 +178,7 @@ def jumping_action():
 def jiggling_action():
     global x
 
-    # 随机决定跳跃方向
+    # 随机决定弹射方向
     direction = random.choice(["left", "right"])
     print(f"Jiggling to the {direction}")
 
@@ -190,7 +190,6 @@ def jiggling_action():
     else:
         frames = animations[10]
 
-    total_steps = len(frames)
     move_step =10  # 每帧移动像素数
 
     def update_position_and_animation(cycle=0):
@@ -202,9 +201,11 @@ def jiggling_action():
 
             # 更新位置
             if direction == "left":
-                x += move_step
+                target_x = x + move_step
+                adjust_location(target_x, y)
             else:
-                x -= move_step
+                target_x = x - move_step
+                adjust_location(x - move_step, y)
 
             window.geometry(f"512x320+{x}+{y}")
 
@@ -222,7 +223,7 @@ def flying_action():
     global x, y
 
     # 定义动画序列：(动画帧列表, on_start 回调)
-    animation_sequence
+    animation_sequence = []
     
     # 随机决定跳跃方向
     direction = random.choice(["left", "right"])
@@ -241,6 +242,7 @@ def flying_action():
             (animations[2], lambda: print("Flying Action Start - ON")),
             (animations[0], lambda: move_up()),
             (animations[0], lambda: move_down()),
+            (animations[0], lambda: 0),
             (animations[1], lambda: print("Flying Action Start - Off"))
         ]
         
@@ -259,26 +261,33 @@ def flying_action():
                 on_end=lambda: play_next_animation(index + 1)
             )
         else:
-            # 所有动画播放完毕，恢复原位
-            global x, y
-            window.geometry(f"512x320+{x}+{y}")
             play_action_function(choose_action())
 
-    def move_up(step=20, delay=75):
+    def move_up(step=30, delay=75):
         global y,x
         if step > 0:
-            random_offset = random.randint(0, 5)  # 随机偏移
-            x += random_offset
-            y -= 10
+            random_offset = random.randint(3, 10)  # 随机偏移
+            x_target = x
+            if direction == "right":
+                x_target = x - random_offset
+            else:
+                x_target = x + random_offset    
+            y_target = y - 10
+            adjust_location(x_target, y_target)
             window.geometry(f"512x320+{x}+{y}")
             window.after(delay, move_up, step - 1, delay)
 
-    def move_down(step=20, delay=75):
+    def move_down(step=30, delay=65):
         global y,x
         if step > 0:
-            random_offset = random.randint(-5, 0)
-            x += random_offset
-            y += 10
+            random_offset = random.randint(3, 10)  # 随机偏移
+            x_target = x
+            if direction == "right":
+                x_target = x - random_offset
+            else:
+                x_target = x + random_offset    
+            y_target = y + 10
+            adjust_location(x_target, y_target)
             window.geometry(f"512x320+{x}+{y}")
             window.after(delay, move_down, step - 1, delay)
 
@@ -393,8 +402,8 @@ def eating_action():
 special_actions = [2]
 normal_actions = [0,1,3,4,5,6,7]
 
-special_actions = [6]
-normal_actions = [6]
+special_actions = [1]
+normal_actions = [1]
 
 # 行动函数映射
 action_functions = {

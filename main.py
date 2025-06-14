@@ -1,9 +1,24 @@
 import tkinter as tk
 import random
+import tempfile
+import os
+from PIL import Image, ImageSequence
+import win32gui
+
+# Get window size
+# 获取当前活动窗口的句柄
+hwnd = win32gui.GetForegroundWindow()
+
+# 获取窗口矩形（左、上、右、下）
+left, top, right, bottom = win32gui.GetWindowRect(hwnd)
+
+# 计算宽度和高度
+width = right - left
+height = bottom - top
 
 # Initial state
-x = 1400
-y = 800
+x = int(width * 0.85)
+y = int(height * 0.75)
 cycle = 0
 check = 0
 event_number = random.choice([0, 1, 2, 3])
@@ -17,11 +32,35 @@ window.overrideredirect(True)               # 移除窗口边框
 window.wm_attributes("-topmost", True)      # 窗口始终置顶
 window.wm_attributes("-transparentcolor", "black")  # 启用透明背景
 window.configure(bg='black')                # 设置背景颜色
+
 # Load slime GIF frames
-slime_original = [tk.PhotoImage(file=impath + "Slime_Original.gif", format="gif -index 0")]
-slime_jiggling = [tk.PhotoImage(file=impath + "Slime_Jiggling.gif", format="gif -index %i" % i) for i in range(7)]
-slime_looking = [tk.PhotoImage(file=impath + "Slime_Looking_Around.gif", format="gif -index %i" % i) for i in range(9)]
-slime_blinking = [tk.PhotoImage(file=impath + "Slime_Blinking.gif", format="gif -index %i" % i) for i in range(12)]
+def load_full_gif_frames(path):
+    frames = []
+    with Image.open(path) as im:
+        for i, frame in enumerate(ImageSequence.Iterator(im)):
+            # 创建临时文件
+            with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+                # 保存为 PNG（保留透明通道）
+                frame.save(tmp, format="PNG")
+                tmp_path = tmp.name
+            
+            # 加载 PNG 文件
+            photo = tk.PhotoImage(file=tmp_path)
+            
+            # 添加到帧列表
+            frames.append(photo)
+            
+            # 删除临时文件（Tkinter 会缓存图像）
+            os.remove(tmp_path)
+    
+    return frames
+
+# 加载动画帧
+impath = "assets/"
+slime_original = load_full_gif_frames(impath + "Slime_Original.gif")
+slime_jiggling = load_full_gif_frames(impath + "Slime_Jiggling.gif")
+slime_looking = load_full_gif_frames(impath + "Slime_Looking_Around.gif")
+slime_blinking = load_full_gif_frames(impath + "Slime_Blinking.gif")
 
 # Combine all actions for easier switching
 animations = {

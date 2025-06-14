@@ -15,7 +15,7 @@ width = right - left
 height = bottom - top
 
 # 初始位置
-x = int(width * 0.9)
+x = int(width * 0.7)
 y = int(height * 0.75)
 
 # 初始化参数
@@ -125,7 +125,11 @@ def blinking_action():
     play_animation(animations[3], on_start=lambda: print("Blinking Action Start"))
     
 def looking_arount_action():
-    play_animation(animations[12], on_start=lambda: print("Look arount Start"))
+    def on_end():
+        sleep_time = random.randint(1000, 2000)
+        window.after(sleep_time, lambda: play_action_function(choose_action()))
+
+    play_animation(animations[12], on_start=lambda: print("Look arount Start"), on_end=on_end)
 
 from PIL import ImageOps
 import random
@@ -300,35 +304,6 @@ def sleep_action():
     animation_sequence = [
         (animations[5], lambda: print("sleeping Action Start - Close zzz")),
         (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
-        (animations[15], lambda: print("Sleep")),
         (animations[13], lambda: print("Wake up"))
     ]
 
@@ -402,8 +377,8 @@ def eating_action():
 special_actions = [2]
 normal_actions = [0,1,3,4,5,6,7]
 
-special_actions = [1]
-normal_actions = [1]
+special_actions = [5]
+normal_actions = [5]
 
 # 行动函数映射
 action_functions = {

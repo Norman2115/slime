@@ -3,6 +3,7 @@ import random
 
 # Initial state
 x = 1400
+y = 800
 cycle = 0
 check = 0
 event_number = random.choice([0, 1, 2, 3])
@@ -12,11 +13,10 @@ impath = "assets/"
 
 # Create Tkinter window
 window = tk.Tk()
-window.overrideredirect(True)               # remove window border
-window.wm_attributes("-topmost", True)      # keep slime on top
-window.configure(bg='black')                # fallback background (won't be seen with transparent gifs)
-# window.wm_attributes("-transparentcolor", "black")  # only if you use black-background gifs
-
+window.overrideredirect(True)               # 移除窗口边框
+window.wm_attributes("-topmost", True)      # 窗口始终置顶
+window.wm_attributes("-transparentcolor", "black")  # 启用透明背景
+window.configure(bg='black')                # 设置背景颜色
 # Load slime GIF frames
 slime_original = [tk.PhotoImage(file=impath + "Slime_Original.gif", format="gif -index 0")]
 slime_jiggling = [tk.PhotoImage(file=impath + "Slime_Jiggling.gif", format="gif -index %i" % i) for i in range(7)]
@@ -42,7 +42,7 @@ def update(cycle, event_number, x):
     # Update frame
     frame = frames[cycle]
     label.configure(image=frame)
-    window.geometry(f"100x100+{x}+1050")
+    window.geometry(f"256x256+{x}+{y}")
 
     # Move to next frame
     cycle += 1

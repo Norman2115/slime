@@ -5,4 +5,4 @@ import ss
 #     xy.delete_directory_contents(target_dir)
 
 if __name__ == "__main__":
-    print(ss.get_old_desktop_files(3))
+    print(ss.get_oldest_old_desktop_file(3))

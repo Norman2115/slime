@@ -58,7 +58,6 @@ animations = {
     5 : load_full_gif_frames(impath + "Slime_Close_Eye.gif"),
     6 : load_full_gif_frames(impath + "Slime_Eating_Angry.gif"),
     7 : load_full_gif_frames(impath + "Slime_Eating_Friendly_Portal.gif"),
-    7 : load_full_gif_frames(impath + "Slime_Eating_Friendly.gif"),
     8 : load_full_gif_frames(impath + "Slime_Go_Boom.gif"),
     9 : load_full_gif_frames(impath + "Slime_Hungry.gif"),
     10: load_full_gif_frames(impath + "Slime_Jiggling.gif"),
@@ -67,6 +66,8 @@ animations = {
     13: load_full_gif_frames(impath + "Slime_Open_Eye.gif"),
     14: load_full_gif_frames(impath + "Slime_Original.gif"),
     15: load_full_gif_frames(impath + "Slime_Sleeping.gif"),
+    110: load_full_gif_frames(impath + "Slime_Jiggling.gif", flip=True),
+    111: load_full_gif_frames(impath + "Slime_Jumping.gif", flip=True),
 }
 
 # 通用播放函数
@@ -79,7 +80,7 @@ def play_animation(frames, on_start=None, on_end=None):
     def update_frame(cycle):
         if cycle < len(frames):
             label.configure(image=frames[cycle])
-            window.geometry(f"256x320+{x}+{y}")
+            window.geometry(f"512x320+{x}+{y}")
             cycle += 1
             window.after(150, update_frame, cycle)
         else:
@@ -98,6 +99,105 @@ def original_action():
 def blinking_action():
     play_animation(animations[3], on_start=lambda: print("Blinking Action Start"))
     
+def looking_arount_action():
+    play_animation(animations[12], on_start=lambda: print("Look arount Start"))
+
+from PIL import ImageOps
+import random
+
+def jumping_action():
+    global x
+
+    # 随机决定跳跃方向
+    direction = random.choice(["left", "right"])
+    print(f"Jumping to the {direction}")
+
+    # 备份原始位置
+    original_x = x
+
+    # 翻转动画帧（如果需要）
+    if direction == "right":
+        # 加载翻转后的帧
+        flipped_frames = animations[111]
+        frames = flipped_frames
+    else:
+        frames = animations[11]
+
+    total_steps = len(frames)
+    move_step = 10  # 每帧移动像素数
+
+    def update_position_and_animation(cycle=0):
+        global x
+
+        if cycle < len(frames):
+            # 更新帧
+            label.configure(image=frames[cycle])
+
+            # 更新位置
+            if direction == "left":
+                x += move_step
+            else:
+                x -= move_step
+
+            window.geometry(f"512x320+{x}+{y}")
+
+            # 播放下一帧
+            window.after(150, update_position_and_animation, cycle + 1)
+        else:
+            # 动画结束，恢复原始位置
+            window.geometry(f"512x320+{x}+{y}")
+            play_action_function(choose_action())
+
+    # 开始播放动画并同步移动
+    update_position_and_animation()
+    
+def jiggling_action():
+    global x
+
+    # 随机决定跳跃方向
+    direction = random.choice(["left", "right"])
+    print(f"Jiggling to the {direction}")
+
+    # 备份原始位置
+    original_x = x
+
+    # 翻转动画帧（如果需要）
+    if direction == "right":
+        # 加载翻转后的帧
+        flipped_frames = animations[110]
+        frames = flipped_frames
+    else:
+        frames = animations[10]
+
+    total_steps = len(frames)
+    move_step =10  # 每帧移动像素数
+
+    def update_position_and_animation(cycle=0):
+        global x
+
+        if cycle < len(frames):
+            # 更新帧
+            label.configure(image=frames[cycle])
+
+            # 更新位置
+            if direction == "left":
+                x += move_step
+            else:
+                x -= move_step
+
+            window.geometry(f"512x320+{x}+{y}")
+
+            # 播放下一帧
+            window.after(150, update_position_and_animation, cycle + 1)
+        else:
+            # 动画结束，恢复原始位置
+            window.geometry(f"512x320+{x}+{y}")
+            play_action_function(choose_action())
+
+    # 开始播放动画并同步移动
+    update_position_and_animation()
+    
+
 def flying_action():
     global x, y
 
@@ -129,7 +229,7 @@ def flying_action():
             # 所有动画播放完毕，恢复原位
             global x, y
             x, y = original_x, original_y
-            window.geometry(f"256x320+{x}+{y}")
+            window.geometry(f"512x320+{x}+{y}")
             play_action_function(choose_action())
 
     def move_up(step=20, delay=75):
@@ -138,7 +238,7 @@ def flying_action():
             random_offset = random.randint(0, 5)  # 随机偏移
             x += random_offset
             y -= 10
-            window.geometry(f"256x320+{x}+{y}")
+            window.geometry(f"512x320+{x}+{y}")
             window.after(delay, move_up, step - 1, delay)
 
     def move_down(step=20, delay=75):
@@ -147,7 +247,7 @@ def flying_action():
             random_offset = random.randint(-5, 0)
             x += random_offset
             y += 10
-            window.geometry(f"256x320+{x}+{y}")
+            window.geometry(f"512x320+{x}+{y}")
             window.after(delay, move_down, step - 1, delay)
 
     # 开始播放第一个动画
@@ -204,6 +304,8 @@ def sleep_action():
                 frames,
                 on_end=lambda: play_next_animation(index + 1)
             )
+        else:
+            play_action_function(choose_action())
 
     # 开始播放第一个动画
     play_next_animation()
@@ -236,7 +338,7 @@ def eating_action():
     # 动画播放逻辑
     def play_next_animation(index=0):
         if index >= len(animation_sequence):
-            window.geometry(f"256x320+{x}+{y}")
+            window.geometry(f"512x320+{x}+{y}")
             play_action_function(choose_action())
             return
 
@@ -257,7 +359,7 @@ def eating_action():
         
 # 行动分类
 special_actions = [2]
-normal_actions = [0,1,3,4]
+normal_actions = [0,1,3,4,5,6,7]
 
 # 行动函数映射
 action_functions = {
@@ -266,6 +368,9 @@ action_functions = {
     2: eating_action,
     3: blinking_action,
     4: sleep_action,
+    5: looking_arount_action,
+    6: jumping_action,
+    7: jiggling_action,
 }
 
 # 选择行动函数

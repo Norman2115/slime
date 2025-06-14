@@ -43,12 +43,7 @@ def adjust_location(x_input,y_input):
     else:
         x = x_input    
     
-    if y_input < 0 - adjust_height:
-        y = y_input + height
-    elif y_input > height - adjust_height:
-        x = y_input - height
-    else:
-        y = y_input    
+    y = y_input    
 
 
 # 加载GIF帧函数
